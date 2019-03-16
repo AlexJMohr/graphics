@@ -4,16 +4,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.alexjmohr.graphics</groupId>
 	<artifactId>graphics</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<name>Alex Mohr's OpenGL Graphics Samples</name>
 	
 	<modules>
 		<module>common</module>
+		<module>cube</module>
 	</modules>
 
 	<properties>
 		<lwjgl.version>3.2.1</lwjgl.version>
+		<joml.version>1.9.13</joml.version>
 	</properties>
 
 	<profiles>
@@ -118,6 +120,11 @@
 			<artifactId>lwjgl-stb</artifactId>
 			<version>${lwjgl.version}</version>
 			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.joml</groupId>
+			<artifactId>joml</artifactId>
+			<version>${joml.version}</version>
 		</dependency>
 	</dependencies>
 </project>
