@@ -1,12 +1,9 @@
 package com.alexjmohr.graphics.common;
  
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import java.util.logging.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 /**
@@ -63,7 +60,6 @@ public abstract class BaseApp {
 	
 	public BaseApp() {
 		timer = new Timer();
-		window = new Window(windowTitle, windowWidth, windowHeight, vsync);
 	}
 	
 	/**
@@ -89,8 +85,12 @@ public abstract class BaseApp {
 		}
 		
 		// initialize the window and timer
+		window = new Window(windowTitle, windowWidth, windowHeight, vsync);
 		window.init();
 		timer.init();
+		
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 	}
 	
 	/**
