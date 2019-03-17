@@ -13,5 +13,5 @@ See the root [pom.xml](pom.xml) for more details.
 
 |Module|Description|
 |------|---|
-|common|classes common to other modules|
-|spinningcube|A spinning textured cube|
+|common|Classes common to other modules. Running this module opens a blank window.|
+|cube|A spinning coloured cube.|

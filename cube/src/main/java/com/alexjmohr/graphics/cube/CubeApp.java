@@ -191,4 +191,14 @@ public class CubeApp extends BaseApp {
 		// Rotate the cube over time
 		cubeAngleY += cubeRotateSpeed * delta;
 	}
+	
+	@Override
+	protected void destroy() {
+		vboPositions.delete();
+		eboIndices.delete();
+		vao.delete();
+		program.delete();
+		
+		super.destroy();
+	}
 }
