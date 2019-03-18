@@ -1,3 +1,9 @@
 # eclipse settings and project
 .settings/
 .project
+
+#vscode files
+.vscode/
+
+# maven builds
+target/
