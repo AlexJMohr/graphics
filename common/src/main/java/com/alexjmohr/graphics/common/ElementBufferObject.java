@@ -9,7 +9,7 @@ public class ElementBufferObject extends BufferObject {
 	/**
 	 * The target to use when binding or uploading data for all Vertex Buffer Objects
 	 */
-	private static final int TARGET = GL_ELEMENT_ARRAY_BUFFER; 
+	private static final int TARGET = GL_ELEMENT_ARRAY_BUFFER;
 
 	/**
 	 * Generates the VBO

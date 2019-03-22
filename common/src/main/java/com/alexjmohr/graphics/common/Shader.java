@@ -54,15 +54,17 @@ public class Shader {
 	public static Shader loadShader(int type, String file) {
 		StringBuilder builder = new StringBuilder();
 		
-		try (InputStream in = new FileInputStream(file);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+		try (InputStream in = Shader.class.getResourceAsStream(file);
+				InputStreamReader streamReader = new InputStreamReader(in);
+				BufferedReader reader = new BufferedReader(streamReader)) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				builder.append(line).append("\n");
 			}
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			throw new RuntimeException("Failed to load a shader file." + System.lineSeparator() + ex.getMessage());
 		}
+		
 		CharSequence source = builder.toString();
 		return new Shader(type, source);
 	}

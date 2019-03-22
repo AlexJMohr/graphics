@@ -1,13 +1,12 @@
 package com.alexjmohr.graphics.cube;
 
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
+//import org.lwjgl.system.MemoryStack;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.lwjgl.system.MemoryStack;
 
 import com.alexjmohr.graphics.common.*;
 
@@ -19,34 +18,14 @@ import com.alexjmohr.graphics.common.*;
 public class CubeApp extends BaseApp {
 	
 	/**
-	 * The shader program that draws the cube
-	 */
-	ShaderProgram program;
-	
-	/**
-	 * The VAO that holds the cube's VBOs
-	 */
-	VertexArrayObject vao;
-	
-	/**
-	 * The vbo for positions data
-	 */
-	VertexBufferObject vboPositions;
-	
-	/**
-	 * The buffer for indices
-	 */
-	ElementBufferObject eboIndices;
-	
-	/**
 	 * The main camera
 	 */
 	Camera camera;
 	
-	/**
-	 * The number of indices in the element buffer
-	 */
-	int numIndices;
+//	/**
+//	 * The number of indices in the element buffer
+//	 */
+//	int numIndices;
 	
 	/**
 	 * The camera's projection matrix
@@ -54,7 +33,7 @@ public class CubeApp extends BaseApp {
 	Matrix4f projection;
 	
 	/**
-	 * The speed at which the cube rotates per second
+	 * The speed at which the cube rotates in radians per second
 	 */
 	float cubeRotateSpeed = 2.0f;
 	
@@ -62,6 +41,16 @@ public class CubeApp extends BaseApp {
 	 * The current angle of the cube
 	 */
 	float cubeAngleY = 0.0f;
+	
+	/**
+	 * The mesh renderer used to render the cube
+	 */
+	private MeshRenderer meshRenderer;
+	
+	/**
+	 * The mesh that contains the cube
+	 */
+	private Mesh cubeMesh;
 	
 	public CubeApp() {
 		super();
@@ -73,13 +62,13 @@ public class CubeApp extends BaseApp {
 	protected void init() {
 		super.init();
 		
-		// Initialize the camera
+		// Create the camera
 		camera = new Camera(new Vector3f(5, 5, 5), new Vector3f(-1, -1, -1).normalize());
 		
 		// Load the default shader program
-		program = new ShaderProgram();
-		Shader vertexShader = Shader.loadShader(GL_VERTEX_SHADER, "res/default.vert");
-		Shader fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, "res/default.frag");
+		ShaderProgram program = new ShaderProgram();
+		Shader vertexShader = Shader.loadShader(GL_VERTEX_SHADER, "/default.vert");
+		Shader fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, "/default.frag");
 		program.attachShader(vertexShader);
 		program.attachShader(fragmentShader);
 		program.link();
@@ -88,13 +77,8 @@ public class CubeApp extends BaseApp {
 		vertexShader.delete();
 		fragmentShader.delete();
 		
-		// Create the VAO and bind it for the following operations
-		vao = new VertexArrayObject();
-		vao.bind();
-		
-		// Create the VBO and EBO for the cube positions and indices respectively
-		vboPositions = new VertexBufferObject();
-		eboIndices = new ElementBufferObject();
+		// Create the mesh renderer with the shader program
+		meshRenderer = new MeshRenderer(program);
 		
 		// Cube positions
 		float[] verts = {
@@ -132,58 +116,27 @@ public class CubeApp extends BaseApp {
 				0, 1, 4,
 				1, 5, 4,
 		};
-		numIndices = indices.length;
 		
-		// Upload the positions and indices buffers to the VBO and EBO respectively
-		try (MemoryStack stack = MemoryStack.stackPush()) {
-			// Upload positions
-			FloatBuffer posBuffer = stack.mallocFloat(verts.length);
-			posBuffer.put(verts).flip();
-			vboPositions.bind();
-			vboPositions.uploadData(posBuffer, GL_STATIC_DRAW);
-			// Enable the vertex attribute for positions
-			program.setVertexAttribPointer("position", 3, 0, 0);
-			
-			// Upload indices
-			IntBuffer indexBuffer = stack.mallocInt(indices.length);
-			indexBuffer.put(indices).flip();
-			eboIndices.uploadData(indexBuffer, GL_STATIC_DRAW);
-		}
-		vao.unbind();
+		cubeMesh = new Mesh(verts, null, null, indices);
 	}
-	
-    public static void main( String[] args ) {
-    	new CubeApp().run();
-    }
 
 	@Override
 	protected void render() {
 		// Clear the render buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		program.use();
 		
-		// Calculate projection matrix and set the uniform
-		Matrix4f projection = new Matrix4f().perspective(70.0f, windowWidth / (float) windowHeight, 0.1f, 100.0f);
-		program.setUniform("projection", projection);
+		// position
+		Vector3f cubePosition = new Vector3f(0.0f, 1.0f, -4.0f);
 		
-		// Calculate view matrix and set the uniform
-		Vector3f center = new Vector3f(camera.getForward()).sub(camera.getPosition());
-		Matrix4f view = new Matrix4f().lookAt(camera.getPosition(), center, camera.getUp());
-		program.setUniform("view", view);
+		// rotation
+		Quaternionf cubeRotation = new Quaternionf().fromAxisAngleRad(new Vector3f(0, 1, 0), cubeAngleY);
 		
-		// Calculate the model matrix and set the uniform
-		Matrix4f model = new Matrix4f().rotate(cubeAngleY, new Vector3f(0, 1, 0));
-		program.setUniform("model", model);
+		// scale between 0.5 and 1.0 on y axiss
+		float scaleY = ((float) Math.cos(timer.getTime()) * 0.25f) + 0.75f;
+		Vector3f cubeScale = new Vector3f(1.0f, scaleY, 1.0f);
 		
-		// Bind the VAO and the EBO and draw the cube
-		vao.bind();
-		eboIndices.bind();
-		glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
-		
-		// Unbind everything
-		eboIndices.unbind();
-		vao.unbind();
-		program.unuse();
+		// render the cube with given position, rotation, and scale
+		meshRenderer.renderMesh(cubeMesh, camera, cubePosition, cubeRotation, cubeScale);
 	}
 
 	@Override
@@ -194,11 +147,12 @@ public class CubeApp extends BaseApp {
 	
 	@Override
 	protected void destroy() {
-		vboPositions.delete();
-		eboIndices.delete();
-		vao.delete();
-		program.delete();
-		
+		cubeMesh.delete();
+		meshRenderer.delete();
 		super.destroy();
 	}
+	
+    public static void main(String[] args) {
+    	new CubeApp().run();
+    }
 }

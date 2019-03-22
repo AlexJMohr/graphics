@@ -9,7 +9,7 @@
 	<name>graphics</name>
 	
 	<build>
-		<defaultGoal>compile</defaultGoal>
+		<!-- <defaultGoal>compile</defaultGoal> -->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -26,6 +26,7 @@
 	<modules>
 		<module>common</module>
 		<module>cube</module>
+		<module>model-loading</module>
 	</modules>
 
 	<properties>
