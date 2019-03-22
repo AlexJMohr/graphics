@@ -2,8 +2,13 @@
 .settings/
 .project
 
-#vscode files
+# vscode files
 .vscode/
 
-# maven builds
+# builds
 target/
+*.class
+*.jar
+
+# crash log files
+*.log
