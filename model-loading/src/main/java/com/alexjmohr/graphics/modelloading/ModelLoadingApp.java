@@ -73,7 +73,7 @@ public class ModelLoadingApp extends BaseApp {
 		// Load model
 		modelLoader = new ModelLoader();
 		try {
-			modelLoader.loadModel("model-loading/src/main/resoures/ST_MARIA/ST_MARIA.obj", "/ST_MARIA");
+			modelLoader.loadModel("model-loading/src/main/resources/ST_MARIA/ST_MARIA.obj", "/ST_MARIA");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
