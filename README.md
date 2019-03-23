@@ -13,5 +13,11 @@ See the root [pom.xml](pom.xml) for more details.
 
 |Module|Description|
 |------|---|
-|common|Classes common to other modules. Running this module opens a blank window.|
+|common|The "engine" module that contains most of the interesting code. Other modules are just examples.|
 |cube|A spinning coloured cube.|
+|model-loading|Loads textured meshes using Assimp.|
+
+## TODO
+
+1. Reorganize common module
+2. ModelLoader should return a Model object which contains the meshes and materials that were loaded
