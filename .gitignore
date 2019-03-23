@@ -9,6 +9,7 @@
 target/
 *.class
 *.jar
+*.lst
 
 # crash log files
 *.log
