@@ -3,8 +3,6 @@ package com.alexjmohr.graphics.modelloading;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.util.logging.Logger;
-
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 

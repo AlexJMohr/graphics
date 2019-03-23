@@ -1,20 +1,15 @@
 package com.alexjmohr.graphics.common;
 
-import org.joml.Vector4f;
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.assimp.*;
-import org.lwjgl.system.MemoryUtil;
-
 import static org.lwjgl.assimp.Assimp.*;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
+
+import org.joml.Vector4f;
+import org.lwjgl.*;
+import org.lwjgl.assimp.*;
+import org.lwjgl.system.MemoryUtil;
 
 /**
  * Loads 3D model scenes using Assimp
