@@ -5,11 +5,18 @@
 # vscode files
 .vscode/
 
+# gradle
+.gradle
+
+# intellij IDEA
+.idea
+
 # builds
 target/
 *.class
 *.jar
 *.lst
+build
 
 # crash log files
 *.log

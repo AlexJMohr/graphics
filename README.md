@@ -1,23 +1,24 @@
 # Alex Mohr Graphics
 
-A collection of graphics projects
+3D OpenGL graphics project. See the Features section below.
 
 ## Dependencies
-- Maven
-- Java 11 (lower versions might work)
+
+- Java 10 (lower versions might work)
 - LWJGL 3.2.1
 
-See the root [pom.xml](pom.xml) for more details.
+## Features
 
-## Modules
+- [x] Model Loading
+- [x] Textures
+- [ ] Basic Lighting (ambient, diffuse, specular)
+- [ ] Shadows
+- [ ] Skeletal Animation
+- [ ] Particles
+- [ ] 2D Font Rendering
 
-|Module|Description|
-|------|---|
-|common|The "engine" module that contains most of the interesting code. Other modules are just examples.|
-|cube|A spinning coloured cube.|
-|model-loading|Loads textured meshes using Assimp.|
-
-## TODO
-
-1. Reorganize common module
-2. ModelLoader should return a Model object which contains the meshes and materials that were loaded
+## Build and run
+```bash
+./gradlew build
+./gradlew run
+```
