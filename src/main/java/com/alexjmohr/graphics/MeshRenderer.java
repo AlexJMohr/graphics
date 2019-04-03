@@ -3,6 +3,7 @@ package com.alexjmohr.graphics;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -43,8 +44,8 @@ public class MeshRenderer {
 		program.use();
 		
 		// Calculate projection matrix and set the uniform
-		// TODO: get window width and height from somewhere
-		Matrix4f projection = new Matrix4f().perspective(70.0f, 800 / (float) 600, 0.1f, 100.0f);
+		Window window = GraphicsApp.getInstance().getWindow();
+		Matrix4f projection = new Matrix4f().perspective(70.0f, window.getWidth() / (float) window.getHeight(), 0.1f, 100.0f);
 		program.setUniform("projection", projection);
 		
 		// Calculate view matrix and set the uniform
@@ -55,6 +56,20 @@ public class MeshRenderer {
 		// Calculate the model matrix and set the uniform
 		Matrix4f model = new Matrix4f().translate(meshPosition).rotate(meshRotation).scale(meshScale);
 		program.setUniform("model", model);
+
+		// Calculate normal matrix and set the uniform
+		Matrix3f normalMatrix = new Matrix3f(model);
+		normalMatrix.invert();
+		normalMatrix.transpose();
+		program.setUniform("normalMatrix", normalMatrix);
+
+		// Set camera's position uniform for specular lighting calculations
+		program.setUniform("viewPosition", camera.getPosition());
+
+		// Set light position
+		Vector3f lightPosition = new Vector3f(5, 3, 5);
+		program.setUniform("lightPosition", lightPosition);
+
 		
 		// Bind texture if material has it
 		if (material.hasTexture()) {

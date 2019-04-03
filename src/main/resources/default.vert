@@ -7,13 +7,22 @@ layout (location = 2) in vec2 texcoord;
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
+uniform mat3 normalMatrix;
 
-out vec3 norm;
-out vec2 texCoord;
+out vec3 fragPosition;
+out vec3 fragNormal;
+out vec2 fragTexCoord;
 
 void main() {
-	mat4 mvp = projection * view * model;
-	gl_Position = mvp * vec4(position, 1.0);
-	norm = normal;
-	texCoord = texcoord;
+    // vertex position in screen space
+	gl_Position = projection * view * model * vec4(position, 1.0);
+
+	// fragment position in world space
+	fragPosition = vec3(model * vec4(position, 1.0));
+
+	// transform normals to world space
+	fragNormal = normalMatrix * normal;
+
+	// pass texture coordinates to fragment shader untouched
+	fragTexCoord = texcoord;
 }

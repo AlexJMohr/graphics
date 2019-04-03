@@ -11,11 +11,17 @@
 
 - [x] Model Loading
 - [x] Textures
-- [ ] Basic Lighting (ambient, diffuse, specular)
+- [x] Basic Lighting (single light source)
+- [ ] Advanced Lighting
+    - [ ] Directional Light
+    - [ ] Point Light
+    - [ ] Spot Light
+    - [ ] Multiple Lights
 - [ ] Shadows
 - [ ] Skeletal Animation
 - [ ] Particles
 - [ ] 2D Font Rendering
+- [ ] Sky Box
 
 ## Build and run
 ```bash

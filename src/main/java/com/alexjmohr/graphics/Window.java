@@ -6,6 +6,7 @@ import org.lwjgl.opengl.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
@@ -100,6 +101,8 @@ public class Window {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+        glfwWindowHint(GLFW_SAMPLES, 4);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
         // Create the window and set OpenGL context
         window = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -121,9 +124,12 @@ public class Window {
 
         setVsyncEnabled(vsyncEnabled);
 
+        glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
         glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
+        glViewport(0, 0, width, height);
 
         glfwShowWindow(window);
     }
@@ -163,5 +169,21 @@ public class Window {
     public void destroy() {
         keyCallback.free();
         glfwDestroyWindow(window);
+    }
+
+    /**
+     * Get the width
+     * @return the width
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * Get the height
+     * @return the height
+     */
+    public int getHeight() {
+        return height;
     }
 }

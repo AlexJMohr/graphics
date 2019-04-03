@@ -4,13 +4,22 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
+import java.awt.*;
 import java.util.logging.*;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
+/**
+ * Singleton class for running the app
+ */
 public class GraphicsApp {
+
+    /**
+     * The singleton instance
+     */
+    private static GraphicsApp instance;
 
     private static final int WINDOW_WIDTH = 1280;
     private static final int WINDOW_HEIGHT = 720;
@@ -38,9 +47,29 @@ public class GraphicsApp {
     float angle = 0.0f;
     float rotateSpeed = 1.0f;
 
-    public GraphicsApp() {
+    private GraphicsApp() {
         timer = new Timer();
         window = new Window(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, VSYNC_ENABLED);
+    }
+
+    /**
+     * Get the singleton instance of the app. It will be instantiated if this is
+     * the first time calling it.
+     * @return the app instance
+     */
+    public static GraphicsApp getInstance() {
+        if (instance == null) {
+            instance = new GraphicsApp();
+        }
+        return instance;
+    }
+
+    /**
+     * Get the window
+     * @return the window
+     */
+    public Window getWindow() {
+        return window;
     }
 
     public void run() {
@@ -75,7 +104,7 @@ public class GraphicsApp {
         fragmentShader.delete();
 
         // Create the camera
-        camera = new Camera(new Vector3f(5, 5, 5), new Vector3f(-1, -1, -1).normalize());
+        camera = new Camera(new Vector3f(0, 0, 10), new Vector3f(0, 0, -1).normalize());
 
         // Create the mesh renderer with the shader program
         meshRenderer = new MeshRenderer(program);
@@ -83,7 +112,9 @@ public class GraphicsApp {
         // Load model
         modelLoader = new ModelLoader();
         try {
-            modelLoader.loadModel("src/main/resources/ST_MARIA/ST_MARIA.obj", "/ST_MARIA");
+//            modelLoader.loadModel("src/main/resources/ST_MARIA/ST_MARIA.obj", "/ST_MARIA");
+            modelLoader.loadModel("src/main/resources/teapot.obj", "/");
+//            modelLoader.loadModel("src/main/resources/cube.obj", "/");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -121,7 +152,7 @@ public class GraphicsApp {
     private void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Vector3f meshPosition = new Vector3f();
+        Vector3f meshPosition = new Vector3f(0, -1.5f, 0);
         Quaternionf meshRotation = new Quaternionf().fromAxisAngleRad(0, 1, 0, angle);
         Vector3f meshScale = new Vector3f(1);
 
@@ -148,6 +179,6 @@ public class GraphicsApp {
     }
 
     public static void main(String[] args) {
-        new GraphicsApp().run();
+        GraphicsApp.getInstance().run();
     }
 }
