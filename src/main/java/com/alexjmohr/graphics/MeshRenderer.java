@@ -91,8 +91,7 @@ public class MeshRenderer {
 		// Bind texture if material has it
 		if (material.hasTexture()) {
 			glActiveTexture(GL_TEXTURE0);
-			Texture texture = material.getTexture();
-			texture.bind();
+			material.getTexture().bind();
 			program.setUniform("material.texture", 0);
 			program.setUniform("material.hasTexture", 1);
 		} else {
@@ -102,8 +101,7 @@ public class MeshRenderer {
 		// bind normal map if material has it
 		if (material.hasNormalMap()) {
 			glActiveTexture(GL_TEXTURE1);
-			Texture normalMap = material.getNormalMap();
-			normalMap.bind();
+			material.getNormalMap().bind();
 			program.setUniform("material.normalMap", 1);
 			program.setUniform("material.hasNormalMap", 1);
 		} else {

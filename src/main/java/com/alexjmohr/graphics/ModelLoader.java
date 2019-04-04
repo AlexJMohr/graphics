@@ -89,13 +89,14 @@ public class ModelLoader {
 		}
 
 		// Load normal map
+		path.clear();
 		aiGetMaterialTexture(aiMaterial, aiTextureType_NORMALS, 0, path, (IntBuffer) null, null, null, null, null, null);
-		texPath = path.dataString();
+		String normMapPath = path.dataString();
 		Texture normalMap = null;
-		if (texPath != null && texPath.length() > 0) {
-			String textureFile = texturesDir + "/" + texPath;
-			textureFile = textureFile.replace("//", "/");
-			normalMap = TextureCache.getInstance().getTexture(textureFile);
+		if (normMapPath != null && normMapPath.length() > 0) {
+			String normalMapFile = texturesDir + "/" + normMapPath;
+			normalMapFile = normalMapFile.replace("//", "/");
+			normalMap = TextureCache.getInstance().getTexture(normalMapFile);
 		}
 
 		// Get ambient colour

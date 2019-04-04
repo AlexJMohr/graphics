@@ -13,8 +13,8 @@
 - [x] Textures
 - [x] Basic Lighting (single light source)
 - [ ] Advanced Lighting
-    - [ ] Directional Light
-    - [ ] Point Light
+    - [x] Directional Light
+    - [x] Point Light
     - [ ] Spot Light
     - [ ] Multiple Lights
 - [ ] Shadows

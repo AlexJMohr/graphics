@@ -49,11 +49,9 @@ vec3 calcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir) {
     float spec = pow(max(dot(viewDir, reflectDir), 0), material.shininess);
 
     // combine results
-    vec3 col;
+    vec3 col = vec3(1);
     if (material.hasTexture) {
         col = texture(material.texture, fragTexCoord).xyz;
-    } else {
-        col = vec3(1);
     }
     vec3 ambient = light.ambient * col;
     vec3 diffuse = light.diffuse * diff * col;
@@ -73,11 +71,9 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
 
     // combine results
-    vec3 col;
+    vec3 col = vec3(1);
     if (material.hasTexture) {
         col = texture(material.texture, fragTexCoord).xyz;
-    } else {
-        col = vec3(1);
     }
     vec3 ambient = light.ambient * col;
     vec3 diffuse = light.diffuse * diff * col;
@@ -87,6 +83,7 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
 
 void main() {
     vec3 normal = normalize(fragNormal);
+    //normal = texture(material.normalMap, fragTexCoord).rgb * 2 - 1;
     vec3 viewDir = normalize(viewPosition - fragPosition);
 
     // Directional light
