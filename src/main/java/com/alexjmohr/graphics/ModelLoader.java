@@ -139,6 +139,8 @@ public class ModelLoader {
 		FloatBuffer vertBuffer = MemoryUtil.memAllocFloat(aiMesh.mNumVertices() * 3);
 		FloatBuffer normBuffer = MemoryUtil.memAllocFloat(aiMesh.mNumVertices() * 3);
 		FloatBuffer texCoordBuffer = MemoryUtil.memAllocFloat(aiMesh.mNumVertices() * 2);
+		FloatBuffer tangentBuffer = MemoryUtil.memAllocFloat(aiMesh.mNumVertices() * 3);
+		FloatBuffer bitangentbuffer = MemoryUtil.memAllocFloat(aiMesh.mNumVertices() * 3);
 		IntBuffer indexBuffer = MemoryUtil.memAllocInt(aiMesh.mNumFaces() * 3);
 
 		// process vertices
@@ -171,6 +173,26 @@ public class ModelLoader {
 		}
 		texCoordBuffer.flip();
 
+		// process tangents
+		AIVector3D.Buffer aiTangents = aiMesh.mTangents();
+		while (aiTangents.hasRemaining()) {
+			AIVector3D aiTangent = aiTangents.get();
+			tangentBuffer.put(aiTangent.x());
+			tangentBuffer.put(aiTangent.y());
+			tangentBuffer.put(aiTangent.z());
+		}
+		tangentBuffer.flip();
+
+		// process bitangents
+		AIVector3D.Buffer aiBitangents = aiMesh.mBitangents();
+		while (aiBitangents.hasRemaining()) {
+			AIVector3D aiBitangent = aiBitangents.get();
+			bitangentbuffer.put(aiBitangent.x());
+			bitangentbuffer.put(aiBitangent.y());
+			bitangentbuffer.put(aiBitangent.z());
+		}
+		bitangentbuffer.flip();
+
 		// process indices
 		AIFace.Buffer aiFaces = aiMesh.mFaces();
 		while (aiFaces.hasRemaining()) {
@@ -193,7 +215,7 @@ public class ModelLoader {
 		}
 		
 		// Create the mesh and add it to the meshes array
-		Mesh mesh = new Mesh(vertBuffer, normBuffer, texCoordBuffer, indexBuffer);
+		Mesh mesh = new Mesh(vertBuffer, normBuffer, texCoordBuffer, tangentBuffer, bitangentbuffer, indexBuffer);
 		mesh.setMaterial(material);
 		meshes.add(mesh);
 	}

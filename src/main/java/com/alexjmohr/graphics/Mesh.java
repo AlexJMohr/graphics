@@ -33,6 +33,16 @@ public class Mesh {
 	 * The texture coordinates vbo
 	 */
 	private VertexBufferObject vboTexCoords;
+
+	/**
+	 * The tangents vbo
+	 */
+	private VertexBufferObject vboTangents;
+
+	/**
+	 * The bitangents vbo
+	 */
+	private VertexBufferObject vboBitangents;
 	
 	/**
 	 * The EBO
@@ -53,6 +63,16 @@ public class Mesh {
 	 * The texture coordinates buffer
 	 */
 	private FloatBuffer texCoords;
+
+	/**
+	 * The tangent buffer
+	 */
+	private FloatBuffer tangents;
+
+	/**
+	 * The bitangent buffer
+	 */
+	private FloatBuffer bitangents;
 	
 	/**
 	 * The index buffer
@@ -65,22 +85,6 @@ public class Mesh {
 	private Material material;
 	
 	/**
-	 * Creates a mesh with specified positions, normals, texCoords, and elements. Normals and
-	 * texture coordinates can be omitted by passing null.
-	 * @param positions the mesh positions
-	 * @param normals   the normals
-	 * @param texCoords the texture coordinates
-	 * @param elements  the indices/elements.
-	 */
-	public Mesh(float[] positions, float[] normals, float[] texCoords, int[] elements) {
-		this.material = new Material();
-		// initialize buffers
-		initBuffers(positions, normals, texCoords, elements);
-		// upload buffers to VBOs and EBO
-		upload();
-	}
-	
-	/**
 	 * Creates a mesh with specified positions, normals, texCoords, elements. normals and texcoords
 	 * can be omitted by passing null. The buffers are saved, so they should not be freed by the
 	 * caller.
@@ -89,45 +93,18 @@ public class Mesh {
 	 * @param texCoords the texture coordinates buffer
 	 * @param elements  the index buffer. The number of elements is assumed to be this buffer's capacity.
 	 */
-	public Mesh(FloatBuffer positions, FloatBuffer normals, FloatBuffer texCoords, IntBuffer elements) {
+	public Mesh(FloatBuffer positions, FloatBuffer normals, FloatBuffer texCoords, FloatBuffer tangents, FloatBuffer bitangents, IntBuffer elements) {
 		this.material = new Material();
 		// save buffers
 		this.positions = positions;
 		this.normals = normals;
 		this.texCoords = texCoords;
+		this.tangents = tangents;
+		this.bitangents = bitangents;
 		this.elements = elements;
 		
 		// upload buffers to VBOs and EBO
 		upload();
-	}
-	
-	/**
-	 * Initializes the buffers and puts the data in them
-	 * @param positions the positions
-	 * @param normals   the normals
-	 * @param texCoords the texture coordinates
-	 * @param elements  the elements/indices
-	 */
-	private void initBuffers(float[] positions, float[] normals, float[] texCoords, int[] elements) {
-		// Create positions buffer
-		this.positions = MemoryUtil.memAllocFloat(positions.length);
-		this.positions.put(positions).flip();
-		
-		// normals buffer
-		if (normals != null) {
-			this.normals = MemoryUtil.memAllocFloat(normals.length);
-			this.normals.put(normals).flip();
-		}
-		
-		// texture coordinates buffer
-		if (texCoords != null) {
-			this.texCoords = MemoryUtil.memAllocFloat(texCoords.length);
-			this.texCoords.put(texCoords).flip();
-		}
-		
-		// elements buffer
-		this.elements = MemoryUtil.memAllocInt(elements.length);
-		this.elements.put(elements).flip();
 	}
 	
 	/**
@@ -158,6 +135,22 @@ public class Mesh {
 			vboTexCoords.bind();
 			vboTexCoords.uploadData(texCoords, GL_STATIC_DRAW);
 			glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
+		}
+
+		// tangents
+		if (tangents != null) {
+			vboTangents = new VertexBufferObject();
+			vboTangents.bind();
+			vboTangents.uploadData(tangents, GL_STATIC_DRAW);
+			glVertexAttribPointer(3, 3, GL_FLOAT, false, 0, 0);
+		}
+
+		// bitangents
+		if (bitangents != null) {
+			vboBitangents = new VertexBufferObject();
+			vboBitangents.bind();
+			vboBitangents.uploadData(bitangents, GL_STATIC_DRAW);
+			glVertexAttribPointer(4, 3, GL_FLOAT, false, 0, 0);
 		}
 		
 		// elements

@@ -113,12 +113,16 @@ public class MeshRenderer {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
+		glEnableVertexAttribArray(4);
 		glDrawElements(GL_TRIANGLES, mesh.getNumElements(), GL_UNSIGNED_INT, 0);
 		
 		// Unbind everything
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(3);
+		glDisableVertexAttribArray(4);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
