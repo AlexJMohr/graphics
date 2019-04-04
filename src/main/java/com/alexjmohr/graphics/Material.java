@@ -1,5 +1,6 @@
 package com.alexjmohr.graphics;
 
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 /**
@@ -7,22 +8,28 @@ import org.joml.Vector4f;
  */
 public class Material {
 
-    public static final Vector4f DEFAULT_COLOUR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+    public static final Vector3f DEFAULT_COLOUR = new Vector3f(1.0f, 1.0f, 1.0f);
+    public static final float DEFAULT_SHININESS = 32;
 
     /**
      * Diffuse colour
      */
-    private Vector4f diffuse;
+    private Vector3f diffuse;
 
     /**
      * Ambient colour
      */
-    private Vector4f ambient;
+    private Vector3f ambient;
 
     /**
      * Specular colour
      */
-    private Vector4f specular;
+    private Vector3f specular;
+
+    /**
+     * The specular exponent
+     */
+    private float shininess;
 
     /**
      * Diffuse texture
@@ -38,7 +45,7 @@ public class Material {
      * Creates a material with default colours
      */
     public Material() {
-        this(DEFAULT_COLOUR, DEFAULT_COLOUR, DEFAULT_COLOUR);
+        this(DEFAULT_COLOUR, DEFAULT_COLOUR, DEFAULT_COLOUR, DEFAULT_SHININESS);
     }
 
     /**
@@ -48,10 +55,11 @@ public class Material {
      * @param ambient ambient colour
      * @param specular specular colour
      */
-    public Material(Vector4f diffuse, Vector4f ambient, Vector4f specular) {
+    public Material(Vector3f diffuse, Vector3f ambient, Vector3f specular, float shininess) {
         this.diffuse = diffuse != null ? diffuse : DEFAULT_COLOUR;
         this.ambient = ambient != null ? diffuse : DEFAULT_COLOUR;
         this.specular = specular != null ? diffuse : DEFAULT_COLOUR;
+        this.shininess = shininess;
     }
 
     /**
@@ -71,43 +79,59 @@ public class Material {
     /**
      * @return the diffuse
      */
-    public Vector4f getDiffuse() {
+    public Vector3f getDiffuse() {
         return diffuse;
     }
 
     /**
      * @param diffuse the diffuse to set
      */
-    public void setDiffuse(Vector4f diffuse) {
+    public void setDiffuse(Vector3f diffuse) {
         this.diffuse = diffuse;
     }
 
     /**
      * @return the ambient
      */
-    public Vector4f getAmbient() {
+    public Vector3f getAmbient() {
         return ambient;
     }
 
     /**
      * @param ambient the ambient to set
      */
-    public void setAmbient(Vector4f ambient) {
+    public void setAmbient(Vector3f ambient) {
         this.ambient = ambient;
     }
 
     /**
      * @return the specular
      */
-    public Vector4f getSpecular() {
+    public Vector3f getSpecular() {
         return specular;
     }
 
     /**
      * @param specular the specular to set
      */
-    public void setSpecular(Vector4f specular) {
+    public void setSpecular(Vector3f specular) {
         this.specular = specular;
+    }
+
+    /**
+     * Get the shininess
+     * @return the shininess
+     */
+    public float getShininess() {
+        return shininess;
+    }
+
+    /**
+     * Set the shininess
+     * @param shininess The shininess to set
+     */
+    public void setShininess(float shininess) {
+        this.shininess = shininess;
     }
 
     /**

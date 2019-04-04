@@ -104,7 +104,7 @@ public class GraphicsApp {
         fragmentShader.delete();
 
         // Create the camera
-        camera = new Camera(new Vector3f(0, 0, 10), new Vector3f(0, 0, -1).normalize());
+        camera = new Camera(new Vector3f(0, 0, 3), new Vector3f(0, 0, -1).normalize());
 
         // Create the mesh renderer with the shader program
         meshRenderer = new MeshRenderer(program);
@@ -113,7 +113,8 @@ public class GraphicsApp {
         modelLoader = new ModelLoader();
         try {
 //            modelLoader.loadModel("src/main/resources/ST_MARIA/ST_MARIA.obj", "/ST_MARIA");
-            modelLoader.loadModel("src/main/resources/teapot.obj", "/");
+//            modelLoader.loadModel("src/main/resources/teapot.obj", "/");
+            modelLoader.loadModel("src/main/resources/cobble/cobble.obj", "/cobble");
 //            modelLoader.loadModel("src/main/resources/cube.obj", "/");
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -152,7 +153,7 @@ public class GraphicsApp {
     private void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Vector3f meshPosition = new Vector3f(0, -1.5f, 0);
+        Vector3f meshPosition = new Vector3f(0, 0, 0);
         Quaternionf meshRotation = new Quaternionf().fromAxisAngleRad(0, 1, 0, angle);
         Vector3f meshScale = new Vector3f(1);
 

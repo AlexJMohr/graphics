@@ -104,6 +104,16 @@ public class ShaderProgram {
 	}
 
 	/**
+	 * Set the uniform specified by the given name to the given value
+	 * @param name  the name of the uniform to set
+	 * @param value the value to set
+	 */
+	public void setUniform(String name, float value) {
+		int location = glGetUniformLocation(program, name);
+		glUniform1f(location, value);
+	}
+
+	/**
 	 * Sets the uniform specified by the given name to the given value
 	 * @param name  the name of the uniform to set
 	 * @param value the value to set

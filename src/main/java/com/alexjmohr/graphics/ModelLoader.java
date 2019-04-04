@@ -6,6 +6,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.*;
 import org.lwjgl.assimp.*;
@@ -87,30 +88,45 @@ public class ModelLoader {
 			texture = TextureCache.getInstance().getTexture(textureFile);
 		}
 
+		// Load normal map
+		aiGetMaterialTexture(aiMaterial, aiTextureType_NORMALS, 0, path, (IntBuffer) null, null, null, null, null, null);
+		texPath = path.dataString();
+		Texture normalMap = null;
+		if (texPath != null && texPath.length() > 0) {
+			String textureFile = texturesDir + "/" + texPath;
+			textureFile = textureFile.replace("//", "/");
+			normalMap = TextureCache.getInstance().getTexture(textureFile);
+		}
+
 		// Get ambient colour
-		Vector4f ambient = null;
+		Vector3f ambient = null;
 		int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, aiTextureType_NONE, 0, colour);
 		if (result == 0) {
-			ambient = new Vector4f(colour.r(), colour.g(), colour.b(), colour.a());
+			ambient = new Vector3f(colour.r(), colour.g(), colour.b());
 		}
 
 		// Get diffuse colour
-		Vector4f diffuse = null;
+		Vector3f diffuse = null;
 		result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, colour);
 		if (result == 0) {
-			diffuse = new Vector4f(colour.r(), colour.g(), colour.b(), colour.a());
+			diffuse = new Vector3f(colour.r(), colour.g(), colour.b());
 		}
 
 		// Get specular colour
-		Vector4f specular = null;
-		result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, colour);
+		Vector3f specular = null;
+		result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, colour);
 		if (result == 0) {
-			diffuse = new Vector4f(colour.r(), colour.g(), colour.b(), colour.a());
+			specular = new Vector3f(colour.r(), colour.g(), colour.b());
 		}
 
+		float shininess = Material.DEFAULT_SHININESS;
+		// TODO: get material shininess from Assimp
+		// AI_MATKEY_SHININESS
+
 		// Create the material with given colours and texture
-		Material material = new Material(diffuse, ambient, specular);
+		Material material = new Material(diffuse, ambient, specular, shininess);
 		material.setTexture(texture);
+		material.setNormalMap(normalMap);
 		materials.add(material);
 	}
 	

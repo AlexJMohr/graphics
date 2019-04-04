@@ -63,23 +63,40 @@ public class MeshRenderer {
 		normalMatrix.transpose();
 		program.setUniform("normalMatrix", normalMatrix);
 
+		// Set the material properties
+		program.setUniform("material.ambient", material.getAmbient());
+		program.setUniform("material.diffuse", material.getDiffuse());
+		program.setUniform("material.specular", material.getSpecular());
+		program.setUniform("material.shininess", material.getShininess());
+
+		// Set lights
+		program.setUniform("dirLight.direction", new Vector3f(-1, -1, -1));
+		Vector3f dirLightCol = new Vector3f(135, 206, 235).mul(1.0f / 255.0f);
+		program.setUniform("dirLight.ambient", new Vector3f(dirLightCol).mul(0.2f));
+		program.setUniform("dirLight.diffuse", new Vector3f(dirLightCol).mul(0.5f));
+		program.setUniform("dirLight.specular", new Vector3f(dirLightCol).mul(0.8f));
+
+		program.setUniform("pointLight.position", new Vector3f(-10, 10, 2));
+		program.setUniform("pointLight.constant", 1.0f);
+		program.setUniform("pointLight.linear", 0.35f);
+		program.setUniform("pointLight.quadratic", 0.44f);
+		Vector3f pointLightCol = new Vector3f(1.0f, 0.0f, 0.5f);
+		program.setUniform("pointLight.ambient", new Vector3f(pointLightCol).mul(0.1f));
+		program.setUniform("pointLight.diffuse", new Vector3f(pointLightCol).mul(0.3f));
+		program.setUniform("pointLight.specular", new Vector3f(pointLightCol).mul(0.5f));
+
 		// Set camera's position uniform for specular lighting calculations
 		program.setUniform("viewPosition", camera.getPosition());
-
-		// Set light position
-		Vector3f lightPosition = new Vector3f(5, 3, 5);
-		program.setUniform("lightPosition", lightPosition);
-
 		
 		// Bind texture if material has it
 		if (material.hasTexture()) {
 			glActiveTexture(GL_TEXTURE0);
 			Texture texture = material.getTexture();
 			texture.bind();
-			program.setUniform("tex", 0);
-			program.setUniform("hasTexture", 1);
+			program.setUniform("material.texture", 0);
+			program.setUniform("material.hasTexture", 1);
 		} else {
-			program.setUniform("hasTexture", 0);
+			program.setUniform("material.hasTexture", 0);
 		}
 
 		// bind normal map if material has it
@@ -87,16 +104,11 @@ public class MeshRenderer {
 			glActiveTexture(GL_TEXTURE1);
 			Texture normalMap = material.getNormalMap();
 			normalMap.bind();
-			program.setUniform("normalMap", 1);
-			program.setUniform("hasNormalMap", 1);
+			program.setUniform("material.normalMap", 1);
+			program.setUniform("material.hasNormalMap", 1);
 		} else {
-			program.setUniform("hasNormalMap", 0);
+			program.setUniform("material.hasNormalMap", 0);
 		}
-
-		// Set the colours
-		program.setUniform("ambient", material.getAmbient());
-		program.setUniform("diffuse", material.getDiffuse());
-		program.setUniform("specular", material.getSpecular());
 
 		// Bind the VAO and the EBO and draw the cube
 		mesh.bind();
