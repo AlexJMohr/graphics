@@ -20,3 +20,5 @@ build
 
 # crash log files
 *.log
+
+stale_outputs_checked
