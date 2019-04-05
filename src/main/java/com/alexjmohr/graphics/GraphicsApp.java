@@ -4,9 +4,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.awt.*;
-import java.util.logging.*;
-
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -16,15 +13,15 @@ import org.lwjgl.glfw.GLFWErrorCallback;
  */
 public class GraphicsApp {
 
-    /**
-     * The singleton instance
-     */
-    private static GraphicsApp instance;
-
     private static final int WINDOW_WIDTH = 1280;
     private static final int WINDOW_HEIGHT = 720;
     private static final String WINDOW_TITLE = "Alex J Mohr Graphics";
     private static final boolean VSYNC_ENABLED = true;
+
+    /**
+     * The singleton instance
+     */
+    private static GraphicsApp instance;
 
     /**
      * The GLFW error callback
@@ -41,11 +38,45 @@ public class GraphicsApp {
      */
     private Timer timer;
 
+    /**
+     * The main camera
+     */
     private Camera camera;
+
+    /**
+     * The mesh renderer
+     */
     private MeshRenderer meshRenderer;
+
+    /**
+     * The model loader
+     */
     private ModelLoader modelLoader;
+
+    /**
+     * The current angle of the mesh rotated about the y axis
+     */
     float angle = 0.0f;
-    float rotateSpeed = 1.0f;
+
+    /**
+     * The speed at which teh mesh rotates
+     */
+    float rotateSpeed = 0.5f;
+
+    /**
+     * Shader programs used by the mesh renderer
+     */
+    ShaderProgram[] programs = new ShaderProgram[4];
+
+    /**
+     * The current program being used to render
+     */
+    int currentProgram = programs.length - 1;
+
+    /**
+     * Whether the mesh is being rendered in wireframe mode or not.
+     */
+    boolean wireframeMode = false;
 
     private GraphicsApp() {
         timer = new Timer();
@@ -78,6 +109,27 @@ public class GraphicsApp {
         destroy();
     }
 
+    /**
+     * Load a shader program from the given vertex and fragment shaders
+     *
+     * @param vertPath the resource path to the vertex shader
+     * @param fragPath the resource path to the fragment shader
+     * @return the created shader program
+     */
+    private ShaderProgram loadShaderProgram(String vertPath, String fragPath) {
+        ShaderProgram program = new ShaderProgram();
+        Shader vertexShader = Shader.loadShader(GL_VERTEX_SHADER, vertPath);
+        Shader fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, fragPath);
+        program.attachShader(vertexShader);
+        program.attachShader(fragmentShader);
+        program.link();
+        // Can delete the vertex and fragment shaders, since they are linked to the program now.
+        vertexShader.delete();
+        fragmentShader.delete();
+
+        return program;
+    }
+
     private void init() {
         // Set an error callback for GLFW
         errorCallback = GLFWErrorCallback.createPrint(System.err);
@@ -92,50 +144,24 @@ public class GraphicsApp {
         window.init();
         timer.init();
 
-        // Load the default shader program
-        ShaderProgram program = new ShaderProgram();
-        Shader vertexShader = Shader.loadShader(GL_VERTEX_SHADER, "/default.vert");
-        Shader fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, "/default.frag");
-        program.attachShader(vertexShader);
-        program.attachShader(fragmentShader);
-        program.link();
-        // Can delete the vertex and fragment shaders, since they are linked to the program now.
-        vertexShader.delete();
-        fragmentShader.delete();
+        // Load shader programs
+        programs[0] = loadShaderProgram("/shaders/unlit.vert", "/shaders/unlit.frag");
+        programs[1] = loadShaderProgram("/shaders/lit.vert", "/shaders/lit.frag");
+        programs[2] = loadShaderProgram("/shaders/textured.vert", "/shaders/textured.frag");
+        programs[3] = loadShaderProgram("/shaders/normalMap.vert", "/shaders/normalMap.frag");
 
         // Create the camera
         camera = new Camera(new Vector3f(0, 0, 3), new Vector3f(0, 0, -1).normalize());
 
         // Create the mesh renderer with the shader program
-        meshRenderer = new MeshRenderer(program);
+        meshRenderer = new MeshRenderer(programs[currentProgram]);
 
         // Load model
         modelLoader = new ModelLoader();
         try {
-//            modelLoader.loadModel("src/main/resources/ST_MARIA/ST_MARIA.obj", "/ST_MARIA");
-//            modelLoader.loadModel("src/main/resources/teapot.obj", "/");
-            modelLoader.loadModel("src/main/resources/cobble/cobble.obj", "/cobble");
-//            modelLoader.loadModel("src/main/resources/cube.obj", "/");
+            modelLoader.loadModel("src/main/resources/models/cobble/cobble.obj", "/models/cobble");
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-    }
-
-    private void loop() {
-        float delta;
-
-        while (!window.shouldClose()) {
-            delta = timer.getDelta();
-
-            update(delta);
-            timer.updateUPS();
-
-            render();
-            timer.updateFPS();
-
-            timer.update();
-
-            window.update();
         }
     }
 
@@ -145,6 +171,27 @@ public class GraphicsApp {
      */
     private void update(float delta) {
         angle += rotateSpeed * delta;
+    }
+
+    /**
+     * Set the shader program to the specified index in the shaders programs array
+     * @param index the index to the shader programs array
+     */
+    public void setShaderProgram(int index) {
+        currentProgram = index % programs.length;
+        meshRenderer.setProgram(programs[currentProgram]);
+    }
+
+    /**
+     * Toggle render mode between wireframe and fill
+     */
+    public void toggleWireframe() {
+        wireframeMode = !wireframeMode;
+        if (wireframeMode) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
     }
 
     /**
@@ -160,6 +207,27 @@ public class GraphicsApp {
         // Render the model at the origin
         for (int i = 0; i < modelLoader.getNumMeshes(); i++) {
             meshRenderer.renderMesh(modelLoader.getMesh(i), camera, meshPosition, meshRotation, meshScale);
+        }
+    }
+
+    /**
+     * The render/update loop
+     */
+    private void loop() {
+        float delta;
+
+        while (!window.shouldClose()) {
+            delta = timer.getDelta();
+
+            update(delta);
+            timer.updateUPS();
+
+            render();
+            timer.updateFPS();
+
+            timer.update();
+
+            window.update();
         }
     }
 

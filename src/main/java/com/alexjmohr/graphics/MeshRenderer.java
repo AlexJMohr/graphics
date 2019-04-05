@@ -132,7 +132,15 @@ public class MeshRenderer {
 		mesh.unbind();
 		program.unuse();
 	}
-	
+
+	/**
+	 * Set the shader program
+	 * @param program the new shader program to use for rendering meshes
+	 */
+	public void setProgram(ShaderProgram program) {
+		this.program = program;
+	}
+
 	/**
 	 * Delete the mesh renderer and its resources
 	 */

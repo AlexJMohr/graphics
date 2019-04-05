@@ -31,3 +31,5 @@
 ./gradlew build
 ./gradlew run
 ```
+
+Press 1, 2, 3, and 4 to change shaders to unlit, lit, textured, and normal mapped respectively.
