@@ -66,12 +66,7 @@ public class GraphicsApp {
     /**
      * Shader programs used by the mesh renderer
      */
-    ShaderProgram[] programs = new ShaderProgram[4];
-
-    /**
-     * The current program being used to render
-     */
-    int currentProgram = programs.length - 1;
+    ShaderProgram program;
 
     /**
      * Whether the mesh is being rendered in wireframe mode or not.
@@ -144,22 +139,19 @@ public class GraphicsApp {
         window.init();
         timer.init();
 
-        // Load shader programs
-        programs[0] = loadShaderProgram("/shaders/unlit.vert", "/shaders/unlit.frag");
-        programs[1] = loadShaderProgram("/shaders/lit.vert", "/shaders/lit.frag");
-        programs[2] = loadShaderProgram("/shaders/textured.vert", "/shaders/textured.frag");
-        programs[3] = loadShaderProgram("/shaders/normalMap.vert", "/shaders/normalMap.frag");
+        // Load shader program
+        program = loadShaderProgram("/shaders/default.vert", "/shaders/default.frag");
 
         // Create the camera
         camera = new Camera(new Vector3f(0, 0, 3), new Vector3f(0, 0, -1).normalize());
 
         // Create the mesh renderer with the shader program
-        meshRenderer = new MeshRenderer(programs[currentProgram]);
+        meshRenderer = new MeshRenderer(program);
 
         // Load model
         modelLoader = new ModelLoader();
         try {
-            modelLoader.loadModel("src/main/resources/models/cobble/cobble.obj", "/models/cobble");
+            modelLoader.loadModel("src/main/resources/models/bricks/bricks.obj", "/models/bricks");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -171,15 +163,6 @@ public class GraphicsApp {
      */
     private void update(float delta) {
         angle += rotateSpeed * delta;
-    }
-
-    /**
-     * Set the shader program to the specified index in the shaders programs array
-     * @param index the index to the shader programs array
-     */
-    public void setShaderProgram(int index) {
-        currentProgram = index % programs.length;
-        meshRenderer.setProgram(programs[currentProgram]);
     }
 
     /**
@@ -202,7 +185,7 @@ public class GraphicsApp {
 
         Vector3f meshPosition = new Vector3f(0, 0, 0);
         Quaternionf meshRotation = new Quaternionf().fromAxisAngleRad(0, 1, 0, angle);
-        Vector3f meshScale = new Vector3f(1);
+        Vector3f meshScale = new Vector3f(1, 1, 1);
 
         // Render the model at the origin
         for (int i = 0; i < modelLoader.getNumMeshes(); i++) {

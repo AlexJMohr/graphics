@@ -119,21 +119,7 @@ public class Window {
                     glfwSetWindowShouldClose(window, true);
                 }
 
-                // Change shader programs
                 GraphicsApp app = GraphicsApp.getInstance();
-                if (key == GLFW_KEY_1 || key == GLFW_KEY_KP_1) {
-                    app.setShaderProgram(0);
-                }
-                if (key == GLFW_KEY_2 || key == GLFW_KEY_KP_2) {
-                    app.setShaderProgram(1);
-                }
-                if (key == GLFW_KEY_3 || key == GLFW_KEY_KP_3) {
-                    app.setShaderProgram(2);
-                }
-                if (key == GLFW_KEY_4 || key == GLFW_KEY_KP_4) {
-                    app.setShaderProgram(3);
-                }
-
                 if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
                     app.toggleWireframe();
                 }

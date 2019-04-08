@@ -8,7 +8,9 @@ import org.joml.Vector4f;
  */
 public class Material {
 
-    public static final Vector3f DEFAULT_COLOUR = new Vector3f(1.0f, 1.0f, 1.0f);
+    public static final Vector3f DEFAULT_AMBIENT = new Vector3f(0.1f, 0.1f, 0.1f);
+    public static final Vector3f DEFAULT_DIFFUSE = new Vector3f(0.3f, 0.3f, 0.3f);
+    public static final Vector3f DEFAULT_SPECULAR = new Vector3f(0.1f, 0.1f, 0.1f);
     public static final float DEFAULT_SHININESS = 32;
 
     /**
@@ -45,7 +47,7 @@ public class Material {
      * Creates a material with default colours
      */
     public Material() {
-        this(DEFAULT_COLOUR, DEFAULT_COLOUR, DEFAULT_COLOUR, DEFAULT_SHININESS);
+        this(DEFAULT_DIFFUSE, DEFAULT_AMBIENT, DEFAULT_SPECULAR, DEFAULT_SHININESS);
     }
 
     /**
@@ -56,9 +58,9 @@ public class Material {
      * @param specular specular colour
      */
     public Material(Vector3f diffuse, Vector3f ambient, Vector3f specular, float shininess) {
-        this.diffuse = diffuse != null ? diffuse : DEFAULT_COLOUR;
-        this.ambient = ambient != null ? diffuse : DEFAULT_COLOUR;
-        this.specular = specular != null ? diffuse : DEFAULT_COLOUR;
+        setAmbient(ambient);
+        setDiffuse(diffuse);
+        setSpecular(specular);
         this.shininess = shininess;
     }
 
@@ -76,6 +78,15 @@ public class Material {
         return normalMap != null;
     }
 
+    @Override
+    public String toString() {
+        String out = "";
+        out += String.format("ambient: %s\n", ambient.toString());
+        out += String.format("diffuse: %s\n", diffuse.toString());
+        out += String.format("specular: %s\n", specular.toString());
+        return out;
+    }
+
     /**
      * @return the diffuse
      */
@@ -87,7 +98,11 @@ public class Material {
      * @param diffuse the diffuse to set
      */
     public void setDiffuse(Vector3f diffuse) {
-        this.diffuse = diffuse;
+        if (diffuse == null) {
+            this.diffuse = DEFAULT_DIFFUSE;
+        } else {
+            this.diffuse = diffuse;
+        }
     }
 
     /**
@@ -101,7 +116,11 @@ public class Material {
      * @param ambient the ambient to set
      */
     public void setAmbient(Vector3f ambient) {
-        this.ambient = ambient;
+        if (ambient == null) {
+            this.ambient = DEFAULT_AMBIENT;
+        } else {
+            this.ambient = ambient;
+        }
     }
 
     /**
@@ -115,7 +134,11 @@ public class Material {
      * @param specular the specular to set
      */
     public void setSpecular(Vector3f specular) {
-        this.specular = specular;
+        if (specular == null) {
+            this.specular = DEFAULT_SPECULAR;
+        } else {
+            this.specular = specular;
+        }
     }
 
     /**

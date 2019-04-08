@@ -3,6 +3,8 @@ package com.alexjmohr.graphics;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
+import com.alexjmohr.graphics.lights.DirectionalLight;
+import com.alexjmohr.graphics.lights.PointLight;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -19,6 +21,9 @@ public class MeshRenderer {
 	 * The shader program used to render meshes
 	 */
 	private ShaderProgram program;
+
+	DirectionalLight dirLight;
+	PointLight pointLight;
 	
 	/**
 	 * Creates a mesh renderer with the specified shader program
@@ -26,6 +31,15 @@ public class MeshRenderer {
 	 */
 	public MeshRenderer(ShaderProgram program) {
 		this.program = program;
+
+		dirLight = new DirectionalLight();
+		dirLight.setColor(new Vector3f(135 / 255f, 206 / 255f, 255 / 255f));
+		dirLight.setDirection(new Vector3f(-1, -1, 0));
+
+		pointLight = new PointLight();
+		pointLight.setPosition(new Vector3f(-3, -1, 3));
+		pointLight.setColor(new Vector3f(0.5f, 0.0f, 0.5f));
+
 	}
 	
 	/**
@@ -70,20 +84,22 @@ public class MeshRenderer {
 		program.setUniform("material.shininess", material.getShininess());
 
 		// Set lights
-		program.setUniform("dirLight.direction", new Vector3f(-1, -1, -1));
-		Vector3f dirLightCol = new Vector3f(135, 206, 235).mul(1.0f / 255.0f);
-		program.setUniform("dirLight.ambient", new Vector3f(dirLightCol).mul(0.2f));
-		program.setUniform("dirLight.diffuse", new Vector3f(dirLightCol).mul(0.5f));
-		program.setUniform("dirLight.specular", new Vector3f(dirLightCol).mul(0.8f));
+		dirLight.setShaderProgramUniforms(program, "dirLight");
+//		program.setUniform("dirLight.direction", new Vector3f(-1, -1, -1));
+//		Vector3f dirLightCol = new Vector3f(135, 206, 235).mul(1.0f / 255.0f);
+//		program.setUniform("dirLight.ambient", new Vector3f(dirLightCol).mul(0.2f));
+//		program.setUniform("dirLight.diffuse", new Vector3f(dirLightCol).mul(0.5f));
+//		program.setUniform("dirLight.specular", new Vector3f(dirLightCol).mul(0.8f));
 
-		program.setUniform("pointLight.position", new Vector3f(-10, 10, 2));
-		program.setUniform("pointLight.constant", 1.0f);
-		program.setUniform("pointLight.linear", 0.35f);
-		program.setUniform("pointLight.quadratic", 0.44f);
-		Vector3f pointLightCol = new Vector3f(1.0f, 0.0f, 0.5f);
-		program.setUniform("pointLight.ambient", new Vector3f(pointLightCol).mul(0.1f));
-		program.setUniform("pointLight.diffuse", new Vector3f(pointLightCol).mul(0.3f));
-		program.setUniform("pointLight.specular", new Vector3f(pointLightCol).mul(0.5f));
+		pointLight.setShaderProgramUniforms(program, "pointLight");
+//		program.setUniform("pointLight.position", new Vector3f(-10, 10, 2));
+//		program.setUniform("pointLight.constant", 1.0f);
+//		program.setUniform("pointLight.linear", 0.35f);
+//		program.setUniform("pointLight.quadratic", 0.44f);
+//		Vector3f pointLightCol = new Vector3f(0.1f, 0.5f, 0.9f);
+//		program.setUniform("pointLight.ambient", new Vector3f(pointLightCol).mul(0.1f));
+//		program.setUniform("pointLight.diffuse", new Vector3f(pointLightCol).mul(0.3f));
+//		program.setUniform("pointLight.specular", new Vector3f(pointLightCol).mul(0.5f));
 
 		// Set camera's position uniform for specular lighting calculations
 		program.setUniform("viewPosition", camera.getPosition());

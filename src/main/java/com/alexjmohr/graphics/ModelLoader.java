@@ -10,7 +10,9 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.*;
 import org.lwjgl.assimp.*;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.system.Pointer;
 
 /**
  * Loads 3D model scenes using Assimp
@@ -100,21 +102,21 @@ public class ModelLoader {
 		}
 
 		// Get ambient colour
-		Vector3f ambient = null;
+		Vector3f ambient = Material.DEFAULT_AMBIENT;
 		int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, aiTextureType_NONE, 0, colour);
 		if (result == 0) {
 			ambient = new Vector3f(colour.r(), colour.g(), colour.b());
 		}
 
 		// Get diffuse colour
-		Vector3f diffuse = null;
+		Vector3f diffuse = Material.DEFAULT_DIFFUSE;
 		result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, colour);
 		if (result == 0) {
 			diffuse = new Vector3f(colour.r(), colour.g(), colour.b());
 		}
 
 		// Get specular colour
-		Vector3f specular = null;
+		Vector3f specular = Material.DEFAULT_SPECULAR;
 		result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, colour);
 		if (result == 0) {
 			specular = new Vector3f(colour.r(), colour.g(), colour.b());
@@ -129,6 +131,8 @@ public class ModelLoader {
 		material.setTexture(texture);
 		material.setNormalMap(normalMap);
 		materials.add(material);
+
+		System.out.println("Loaded material:\n" + material.toString());
 	}
 	
 	/**
