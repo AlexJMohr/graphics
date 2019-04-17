@@ -4,6 +4,10 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
+import com.alexjmohr.graphics.loaders.ModelLoader;
+import com.alexjmohr.graphics.rendering.MeshRenderer;
+import com.alexjmohr.graphics.rendering.Shader;
+import com.alexjmohr.graphics.rendering.ShaderProgram;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -52,6 +56,11 @@ public class GraphicsApp {
      * The model loader
      */
     private ModelLoader modelLoader;
+
+    /**
+     * The current scene being rendered and updated
+     */
+    private Scene currentScene;
 
     /**
      * The current angle of the mesh rotated about the y axis
@@ -151,6 +160,12 @@ public class GraphicsApp {
             ex.printStackTrace();
         }
 
+        // Initialize the scene
+        currentScene = new Scene(camera);
+
+        // Initialize the scene and all entitities and their components
+        currentScene.start();
+
         Input.init(window);
     }
 
@@ -166,7 +181,7 @@ public class GraphicsApp {
             window.setShouldClose(true);
         }
 
-        camera.update(delta);
+        currentScene.update(delta);
     }
 
     /**

@@ -9,7 +9,7 @@
 - Java 10 (lower versions might work)
 - LWJGL 3.2.1
 
-## Features
+## Features/Todo
 
 - [x] Model Loading
 - [x] Textures
@@ -20,6 +20,7 @@
     - [x] Point Light
     - [ ] Spot Light
     - [ ] Multiple Lights
+- [ ] Entity/Component system
 - [ ] Shadows
 - [ ] Skeletal Animation
 - [ ] Particles

@@ -1,8 +1,11 @@
-package com.alexjmohr.graphics;
+package com.alexjmohr.graphics.rendering;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
+import com.alexjmohr.graphics.Camera;
+import com.alexjmohr.graphics.GraphicsApp;
+import com.alexjmohr.graphics.Window;
 import com.alexjmohr.graphics.lights.DirectionalLight;
 import com.alexjmohr.graphics.lights.PointLight;
 import org.joml.Matrix3f;

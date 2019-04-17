@@ -1,20 +1,20 @@
-package com.alexjmohr.graphics;
+package com.alexjmohr.graphics.rendering;
 
 import static org.lwjgl.opengl.GL20.*;
 
-import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 
-public class ElementBufferObject extends BufferObject {
+public class VertexBufferObject extends BufferObject {
 	
 	/**
 	 * The target to use when binding or uploading data for all Vertex Buffer Objects
 	 */
-	private static final int TARGET = GL_ELEMENT_ARRAY_BUFFER;
+	private static final int TARGET = GL_ARRAY_BUFFER; 
 
 	/**
 	 * Generates the VBO
 	 */
-	public ElementBufferObject() {
+	public VertexBufferObject() {
 		super(TARGET);
 	}
 	
@@ -23,7 +23,7 @@ public class ElementBufferObject extends BufferObject {
 	 * @param data	the data to upload
 	 * @param usage see glBufferData
 	 */
-	public void uploadData(IntBuffer data, int usage) {
+	public void uploadData(FloatBuffer data, int usage) {
 		bind();
 		glBufferData(TARGET, data, usage);
 	}
@@ -43,7 +43,7 @@ public class ElementBufferObject extends BufferObject {
 	 * @param offset the offset of the existing buffer to put the data in
 	 * @param data   the data to upload
 	 */
-	public void uploadSubData(long offset, IntBuffer data) {
+	public void uploadSubData(long offset, FloatBuffer data) {
 		bind();
 		glBufferSubData(TARGET, offset, data);
 	}

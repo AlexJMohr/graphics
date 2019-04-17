@@ -1,4 +1,4 @@
-package com.alexjmohr.graphics;
+package com.alexjmohr.graphics.loaders;
 
 import java.io.IOException;
 import java.io.InputStream;

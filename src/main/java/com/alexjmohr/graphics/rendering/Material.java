@@ -1,7 +1,6 @@
-package com.alexjmohr.graphics;
+package com.alexjmohr.graphics.rendering;
 
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 /**
  * Material

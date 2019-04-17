@@ -1,6 +1,6 @@
 package com.alexjmohr.graphics.lights;
 
-import com.alexjmohr.graphics.ShaderProgram;
+import com.alexjmohr.graphics.rendering.ShaderProgram;
 import org.joml.Vector3f;
 
 public class DirectionalLight extends Light {

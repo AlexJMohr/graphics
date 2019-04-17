@@ -1,4 +1,4 @@
-package com.alexjmohr.graphics;
+package com.alexjmohr.graphics.rendering;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;

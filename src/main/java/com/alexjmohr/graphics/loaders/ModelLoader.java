@@ -1,4 +1,4 @@
-package com.alexjmohr.graphics;
+package com.alexjmohr.graphics.loaders;
 
 import static org.lwjgl.assimp.Assimp.*;
 
@@ -6,13 +6,14 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import com.alexjmohr.graphics.rendering.Material;
+import com.alexjmohr.graphics.rendering.Mesh;
+import com.alexjmohr.graphics.rendering.Texture;
+import com.alexjmohr.graphics.rendering.TextureCache;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.*;
 import org.lwjgl.assimp.*;
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-import org.lwjgl.system.Pointer;
 
 /**
  * Loads 3D model scenes using Assimp
@@ -26,9 +27,9 @@ public class ModelLoader {
 	 */
 	private ArrayList<Mesh> meshes;
 	
-//	/**
-//	 * List of loaded materials
-//	 */
+	/**
+	 * List of loaded materials
+	 */
 	private ArrayList<Material> materials;
 	
 	public ModelLoader() {

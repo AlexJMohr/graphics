@@ -1,4 +1,4 @@
-package com.alexjmohr.graphics;
+package com.alexjmohr.graphics.rendering;
 
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL20.*;

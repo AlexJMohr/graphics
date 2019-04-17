@@ -1,4 +1,4 @@
-package com.alexjmohr.graphics;
+package com.alexjmohr.graphics.rendering;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import com.alexjmohr.graphics.loaders.ResourceLoader;
 import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.stb.STBImage.*;
