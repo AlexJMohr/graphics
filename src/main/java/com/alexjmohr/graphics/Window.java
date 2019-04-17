@@ -17,11 +17,6 @@ public class Window {
     private long window = NULL;
 
     /**
-     * The GLFW keyboard callback
-     */
-    private GLFWKeyCallback keyCallback;
-
-    /**
      * Is v-sync enabled
      */
     private boolean vsyncEnabled;
@@ -111,22 +106,6 @@ public class Window {
         }
         glfwMakeContextCurrent(window);
 
-        // Set the keyboard callback
-        keyCallback = new GLFWKeyCallback() {
-            public void invoke(long window, int key, int scancode, int action, int mods) {
-                if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-                    // Set the window to close when the ESC key is PRESSED
-                    glfwSetWindowShouldClose(window, true);
-                }
-
-                GraphicsApp app = GraphicsApp.getInstance();
-                if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-                    app.toggleWireframe();
-                }
-            }
-        };
-        glfwSetKeyCallback(window, keyCallback);
-
         setVsyncEnabled(vsyncEnabled);
 
         glEnable(GL_MULTISAMPLE);
@@ -172,7 +151,6 @@ public class Window {
      * Destroys the window and releases callbacks
      */
     public void destroy() {
-        keyCallback.free();
         glfwDestroyWindow(window);
     }
 
@@ -190,5 +168,21 @@ public class Window {
      */
     public int getHeight() {
         return height;
+    }
+
+    /**
+     * Get the GLFW window handle
+     * @return the GLFW window handle
+     */
+    public long getWindow() {
+        return window;
+    }
+
+    /**
+     * Set if the window should close next update
+     * @param shouldClose should the window close
+     */
+    public void setShouldClose(boolean shouldClose) {
+        glfwSetWindowShouldClose(window, shouldClose);
     }
 }

@@ -63,8 +63,10 @@ public class MeshRenderer {
 		program.setUniform("projection", projection);
 		
 		// Calculate view matrix and set the uniform
+
 		Vector3f center = new Vector3f(camera.getForward()).sub(camera.getPosition());
-		Matrix4f view = new Matrix4f().lookAt(camera.getPosition(), center, camera.getUp());
+		Matrix4f view = new Matrix4f().lookAlong(camera.getForward(), camera.getUp());
+		view.translate(camera.getPosition().mul(-1));
 		program.setUniform("view", view);
 		
 		// Calculate the model matrix and set the uniform

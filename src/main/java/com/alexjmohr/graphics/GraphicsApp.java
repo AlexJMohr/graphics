@@ -68,11 +68,6 @@ public class GraphicsApp {
      */
     ShaderProgram program;
 
-    /**
-     * Whether the mesh is being rendered in wireframe mode or not.
-     */
-    boolean wireframeMode = false;
-
     private GraphicsApp() {
         timer = new Timer();
         window = new Window(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, VSYNC_ENABLED);
@@ -155,6 +150,8 @@ public class GraphicsApp {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        Input.init(window);
     }
 
     /**
@@ -163,18 +160,13 @@ public class GraphicsApp {
      */
     private void update(float delta) {
         angle += rotateSpeed * delta;
-    }
 
-    /**
-     * Toggle render mode between wireframe and fill
-     */
-    public void toggleWireframe() {
-        wireframeMode = !wireframeMode;
-        if (wireframeMode) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        } else {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        Input.update();
+        if (Input.getKey(GLFW_KEY_ESCAPE)) {
+            window.setShouldClose(true);
         }
+
+        camera.update(delta);
     }
 
     /**
